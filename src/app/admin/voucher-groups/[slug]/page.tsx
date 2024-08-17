@@ -18,7 +18,6 @@ export default async function Voucher({
   const response = await voucherApi.getVoucher(accessToken!, {
     groupId: params.slug,
   });
-  console.log("whattttt", response);
   return (
     <>
       <div className="space-y-4">

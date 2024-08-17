@@ -30,10 +30,11 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { TVoucherGroupMsgResponse } from "@/schema/voucher-group.schema";
+import { TTableResponse } from "@/types/Table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  payload: TTableResponse<TData> & { page: number; size: number };
   deleteAction?: (ids: any[]) => Promise<{
     status: number;
     payload: TVoucherGroupMsgResponse;
@@ -42,7 +43,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  payload,
   deleteAction,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
@@ -54,6 +55,7 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  const data = payload.result;
   const table = useReactTable({
     data,
     columns,
@@ -139,7 +141,15 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} deleteAction={deleteAction} />
+      <DataTablePagination
+        table={table}
+        deleteAction={deleteAction}
+        paginationProps={{
+          page: payload.page,
+          size: payload.size,
+          totalPage: payload.totalPage,
+        }}
+      />
     </div>
   );
 }

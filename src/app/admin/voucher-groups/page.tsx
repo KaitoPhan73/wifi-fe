@@ -33,16 +33,24 @@ const deleteRangeVoucherGroup = async (ids: any[]) => {
   return result;
 };
 
-export default async function GroupVouchers() {
+export default async function GroupVouchers(props: any) {
+  const params = {
+    page: props.searchParams.page ? +props.searchParams.page : 1,
+    size: props.searchParams.size ? +props.searchParams.size : 10,
+  };
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const response = await voucherGroupApi.getVoucherGroups(accessToken!);
+  const response = await voucherGroupApi.getVoucherGroups(accessToken!, params);
   return (
     <>
       <div className="flex h-full flex-1 flex-col">
         <CardReports data={response.payload} />
         <DataTable
-          data={response.payload.result}
+          payload={{
+            ...response.payload,
+            page: params.page,
+            size: params.size,
+          }}
           columns={columns}
           deleteAction={deleteRangeVoucherGroup}
         />

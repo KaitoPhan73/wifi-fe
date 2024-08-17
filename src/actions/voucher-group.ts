@@ -7,8 +7,9 @@ import {
 } from "@/schema/voucher-group.schema";
 import { TTableResponse } from "@/types/Table";
 const voucherGroupApi = {
-  getVoucherGroups: (accessToken: string) =>
+  getVoucherGroups: (accessToken: string, params?: any) =>
     httpWifi.get<TTableResponse<TVoucherGroupResponse>>("/voucher-groups", {
+      params,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
